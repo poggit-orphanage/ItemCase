@@ -145,7 +145,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         if(!isset($this->cases[$world][$cid]["eid"])) return;
 
         $pk = new RemoveEntityPacket();
-        $pk->eid = $this->cases[$world][$cid]["eid"];
+        $pk->entityUniqueId = $this->cases[$world][$cid]["eid"];
         foreach($players as $pl) {
             $pl->directDataPacket($pk);
         }
