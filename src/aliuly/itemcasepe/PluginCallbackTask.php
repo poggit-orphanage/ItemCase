@@ -55,7 +55,7 @@ class PluginCallbackTask extends PluginTask {
         return $this->callable;
     }
 
-    public function onRun($currentTicks) {
+    public function onRun(int $currentTicks) {
         $c = $this->callable;
         $args = $this->args;
         $args[] = $currentTicks;
