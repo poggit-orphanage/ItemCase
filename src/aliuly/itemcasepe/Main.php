@@ -12,6 +12,7 @@ use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\network\mcpe\protocol\AddItemEntityPacket;
@@ -263,6 +264,12 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     public function onLevelUnload(LevelUnloadEvent $e) {
         $world = $e->getLevel()->getName();
         if(isset($this->cases[$world])) unset($this->cases[$world]);
+    }
+
+    public function onPlayerJoin(PlayerJoinEvent $ev) {
+        $pl = $ev->getPlayer();
+        $level = $pl->getLocation()->getLevel();
+        $this->spawnPlayerCases($pl, $level);
     }
 
     public function onPlayerRespawn(PlayerRespawnEvent $ev) {
