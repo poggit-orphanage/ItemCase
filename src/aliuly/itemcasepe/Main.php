@@ -165,12 +165,8 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
         $pk->type = ItemEntity::NETWORK_ID;
         $pk->item = $item;
-        $pk->x = $pos[0] + 0.5;
-        $pk->y = (float) $pos[1];
-        $pk->z = $pos[2] + 0.5;
-        $pk->speedX = 0;
-        $pk->speedY = 0;
-        $pk->speedZ = 0;
+        $pk->position = new Vector3($pos[0] + 0.5, (float) $pos[1], $pos[2] + 0.5);
+        $pk->motion = new Vector3(0, 0, 0);
         $pk->meta = 0;
         $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
         foreach($players as $pl) {
