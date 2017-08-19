@@ -12,6 +12,7 @@ use pocketmine\block\Block;
 use pocketmine\entity\Entity;
 use pocketmine\math\Vector3;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\network\mcpe\protocol\AddItemEntityPacket;
@@ -261,6 +262,12 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         if(isset($this->cases[$world])) unset($this->cases[$world]);
     }
 
+    public function onPlayerJoin(PlayerJoinEvent $ev) {
+        $pl = $ev->getPlayer();
+        $level = $pl->getLocation()->getLevel();
+        $this->spawnPlayerCases($pl, $level);
+    }
+
     public function onPlayerRespawn(PlayerRespawnEvent $ev) {
         $pl = $ev->getPlayer();
         $level = $pl->getLocation()->getLevel();
@@ -304,7 +311,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $bl = $ev->getBlock();
         if($this->classic) {
             if($bl->getID() != Block::GLASS) {
-                if($bl->getID() == Block::SLAB) {
+                if($bl->getID() == Block::STONE_SLAB) {
                     $bl = $bl->getSide(Vector3::SIDE_UP);
                 } else {
                     $pl->sendMessage("You must place item cases on slabs");
