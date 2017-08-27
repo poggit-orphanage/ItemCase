@@ -164,11 +164,9 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $item->setCount($this->cases[$world][$cid]["count"]);
         $pk = new AddItemEntityPacket();
         $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
-        $pk->type = ItemEntity::NETWORK_ID;
         $pk->item = $item;
         $pk->position = new Vector3($pos[0] + 0.5, (float) $pos[1], $pos[2] + 0.5);
         $pk->motion = new Vector3(0, 0, 0);
-        $pk->meta = 0;
         $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
         foreach($players as $pl) {
             $pl->directDataPacket($pk);
@@ -356,7 +354,6 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     public function onBlockPlace(BlockPlaceEvent $ev) {
         $pl = $ev->getPlayer();
         if(!isset($this->places[$pl->getName()])) return;
-        $id = $ev->getBlock()->getId();
         $ev->setCancelled();
         unset($this->places[$pl->getName()]);
     }
