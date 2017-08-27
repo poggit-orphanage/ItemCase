@@ -164,7 +164,6 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $item->setCount($this->cases[$world][$cid]["count"]);
         $pk = new AddItemEntityPacket();
         $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
-        $pk->type = ItemEntity::NETWORK_ID;
         $pk->item = $item;
         $pk->x = $pos[0] + 0.5;
         $pk->y = (float) $pos[1];
@@ -172,7 +171,6 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $pk->speedX = 0;
         $pk->speedY = 0;
         $pk->speedZ = 0;
-        $pk->meta = 0;
         $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
         foreach($players as $pl) {
             $pl->directDataPacket($pk);
@@ -315,7 +313,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $bl = $ev->getBlock();
         if($this->classic) {
             if($bl->getID() != Block::GLASS) {
-                if($bl->getID() == Block::SLAB) {
+                if($bl->getID() == Block::STONE_SLAB) {
                     $bl = $bl->getSide(Vector3::SIDE_UP);
                 } else {
                     $pl->sendMessage("You must place item cases on slabs");
@@ -360,7 +358,6 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     public function onBlockPlace(BlockPlaceEvent $ev) {
         $pl = $ev->getPlayer();
         if(!isset($this->places[$pl->getName()])) return;
-        $id = $ev->getBlock()->getId();
         $ev->setCancelled();
         unset($this->places[$pl->getName()]);
     }
