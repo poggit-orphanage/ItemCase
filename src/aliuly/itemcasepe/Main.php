@@ -1,4 +1,5 @@
 <?php
+
 namespace aliuly\itemcasepe;
 
 use pocketmine\plugin\PluginBase;
@@ -30,7 +31,6 @@ use pocketmine\network\mcpe\protocol\ProtocolInfo as ProtocolInfo;
 use pocketmine\utils\TextFormat;
 use pocketmine\entity\Item as ItemEntity;
 
-
 class Main extends PluginBase implements CommandExecutor, Listener {
     protected $cases = [];
     protected $touches = [];
@@ -40,13 +40,13 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     // Access and other permission related checks
     private function access(CommandSender $sender, $permission) {
         if($sender->hasPermission($permission)) return true;
-        $sender->sendMessage("You do not have permission to do that.");
+        $sender->sendMessage(TextFormat::RED . "You do not have permission to do that.");
         return false;
     }
 
     private function inGame(CommandSender $sender, $msg = true) {
         if($sender instanceof Player) return true;
-        if($msg) $sender->sendMessage("You can only use this command in-game");
+        if($msg) $sender->sendMessage(TextFormat::RED . "You can only use this command in-game");
         return false;
     }
 
@@ -84,7 +84,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
                         return $this->cmdRespawn($sender);
                     case "reset":
                     case "list":
-                        $sender->sendMessage("Not implemented yet!");
+                        $sender->sendMessage(TextFormat::RED . "Not implemented yet!");
                         return false;
                 }
         }
@@ -99,11 +99,11 @@ class Main extends PluginBase implements CommandExecutor, Listener {
             unset($this->places[$c->getName()]);
         }
         if(!isset($this->touches[$c->getName()])) {
-            $c->sendMessage("NOT adding an ItemCase");
+            $c->sendMessage(TextFormat::RED . "NOT adding an ItemCase");
             return true;
         }
         unset($this->touches[$c->getName()]);
-        $c->sendMessage("Add ItemCase CANCELLED");
+        $c->sendMessage(TextFormat::GREEN . "Add ItemCase CANCELLED");
         return true;
     }
 
@@ -133,18 +133,19 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         }
         return true;
     }
+    
     ////////////////////////////////////////////////////////////////////////
     //
     // Place/Remove ItemCases
     //
     ////////////////////////////////////////////////////////////////////////
+    
     private function rmItemCase(Level $level, $cid, array $players) {
         //echo __METHOD__.",".__LINE__."\n";
         $world = $level->getName();
         //echo "world=$world cid=$cid\n";
         // No EID assigned, it has not been spawned yet!
         if(!isset($this->cases[$world][$cid]["eid"])) return;
-
         $pk = new RemoveEntityPacket();
         $pk->entityUniqueId = $this->cases[$world][$cid]["eid"];
         foreach($players as $pl) {
@@ -248,6 +249,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
             $this->cases[$world][$v[0]] = ["item" => $v[1], "count" => $v[2]];
         }
     }
+    
     //////////////////////////////////////////////////////////////////////
     //
     // Event handlers
@@ -255,6 +257,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     //////////////////////////////////////////////////////////////////////
     //
     // Make sure configs are loaded/unloaded
+    
     public function onLevelLoad(LevelLoadEvent $e) {
         $this->loadCfg($e->getLevel());
     }
@@ -316,8 +319,8 @@ class Main extends PluginBase implements CommandExecutor, Listener {
                 if($bl->getID() == Block::STONE_SLAB) {
                     $bl = $bl->getSide(Vector3::SIDE_UP);
                 } else {
-                    $pl->sendMessage("You must place item cases on slabs");
-                    $pl->sendMessage("or glass blocks!");
+                    $pl->sendMessage(TextFormat::RED . "You must place item cases on slabs" . PHP_EOL . "or glass blocks!");
+                    //$pl->sendMessage("or glass blocks!");
                     return;
                 }
             }
@@ -329,18 +332,17 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $cid = implode(":", [$bl->getX(), $bl->getY(), $bl->getZ()]);
         $item = $pl->getInventory()->getItemInHand();
         if($item->getId() === Item::AIR) {
-            $pl->sendMessage("You must be holding an item!");
+            $pl->sendMessage(TextFormat::RED . "You must be holding an item!");
             $ev->setCancelled();
             return;
         }
-
         if(!$this->addItemCase($bl->getLevel(), $cid,
             implode(":", [$item->getId(), $item->getDamage()]),
             $item->getCount())
         ) {
-            $pl->sendMessage("There is already an ItemCase there!");
+            $pl->sendMessage(TextFormat::RED . "There is already an ItemCase there!");
         } else {
-            $pl->sendMessage("ItemCase placed!");
+            $pl->sendMessage(TextFormat::GREEN . "ItemCase placed!");
         }
         unset($this->touches[$pl->getName()]);
         $ev->setCancelled();
@@ -368,14 +370,13 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $lv = $bl->getLevel();
         $yoff = $bl->getId() != Block::GLASS ? 1 : 0;
         $cid = implode(":", [$bl->getX(), $bl->getY() + $yoff, $bl->getZ()]);
-
         //echo "Block break at/near $cid\n";
         if(isset($this->cases[$lv->getName()][$cid])) {
             if(!$this->access($pl, "itemcase.destroy")) {
                 $ev->setCancelled();
                 return;
             }
-            $pl->sendMessage("Destroying ItemCase $cid");
+            $pl->sendMessage(TextFormat::GREEN . "Destroying ItemCase " . $cid);
             $this->rmItemCase($lv, $cid, $this->getServer()->getOnlinePlayers());
             unset($this->cases[$lv->getName()][$cid]);
             $this->saveCfg($lv);
