@@ -17,7 +17,6 @@ use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\network\mcpe\protocol\AddItemEntityPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
-use pocketmine\network\mcpe\protocol\MoveEntityPacket;
 use pocketmine\level\Level;
 use pocketmine\item\Item;
 use pocketmine\event\level\LevelLoadEvent;
@@ -28,8 +27,6 @@ use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\server\DataPacketSendEvent;
 use pocketmine\network\mcpe\protocol\ProtocolInfo as ProtocolInfo;
 use pocketmine\utils\TextFormat;
-use pocketmine\entity\Item as ItemEntity;
-
 
 class Main extends PluginBase implements CommandExecutor, Listener {
     protected $cases = [];
@@ -165,12 +162,8 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $pk = new AddItemEntityPacket();
         $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
         $pk->item = $item;
-        $pk->x = $pos[0] + 0.5;
-        $pk->y = (float) $pos[1];
-        $pk->z = $pos[2] + 0.5;
-        $pk->speedX = 0;
-        $pk->speedY = 0;
-        $pk->speedZ = 0;
+        $pk->position = new Vector3($pos[0] + 0.5, (float) $pos[1], $pos[2] + 0.5);
+        $pk->motion = new Vector3(0, 0, 0);
         $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
         foreach($players as $pl) {
             $pl->directDataPacket($pk);
