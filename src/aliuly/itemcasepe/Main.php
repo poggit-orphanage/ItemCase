@@ -296,7 +296,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         foreach($this->getServer()->getLevels() as $lv) {
             $this->despawnPlayerCases($pl, $lv);
         }
-        $this->getServer()->getScheduler()->scheduleDelayedTask(new PluginCallbackTask($this, [$this, "spawnPlayerCases"], [$pl, $ev->getTarget()]), 20);
+        $this->getScheduler()->scheduleDelayedTask(new PluginCallbackTask($this, [$this, "spawnPlayerCases"], [$pl, $ev->getTarget()]), 20);
         //$this->spawnPlayerCases($pl,$ev->getTarget());
     }
 
