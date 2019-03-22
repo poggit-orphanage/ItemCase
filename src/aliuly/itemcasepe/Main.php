@@ -115,15 +115,16 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     private function cmdRespawn(CommandSender $c) {
-        $players = $this->getServer()->getOnlinePlayers();
         foreach($this->getServer()->getLevels() as $lv) {
             $world = $lv->getName();
+            $players = $lv->getPlayers();
             foreach(array_keys($this->cases[$world]) as $cid) {
                 $this->rmItemCase($lv, $cid, $players);
             }
         }
         foreach($this->getServer()->getLevels() as $lv) {
             $world = $lv->getName();
+			$players = $lv->getPlayers();
             foreach(array_keys($this->cases[$world]) as $cid) {
                 $this->sndItemCase($lv, $cid, $players);
             }
