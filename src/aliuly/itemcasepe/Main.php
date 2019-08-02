@@ -16,7 +16,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
 use pocketmine\network\mcpe\protocol\AddItemActorPacket;
-use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
+use pocketmine\network\mcpe\protocol\RemoveActorPacket;
 use pocketmine\level\Level;
 use pocketmine\item\Item;
 use pocketmine\event\level\LevelLoadEvent;
@@ -143,7 +143,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         // No EID assigned, it has not been spawned yet!
         if(!isset($this->cases[$world][$cid]["eid"])) return;
 
-        $pk = new RemoveEntityPacket();
+        $pk = new RemoveActorPacket();
         $pk->entityUniqueId = $this->cases[$world][$cid]["eid"];
         foreach($players as $pl) {
             $pl->directDataPacket($pk);
