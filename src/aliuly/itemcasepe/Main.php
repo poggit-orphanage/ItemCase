@@ -15,7 +15,7 @@ use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\entity\EntityLevelChangeEvent;
-use pocketmine\network\mcpe\protocol\AddItemEntityPacket;
+use pocketmine\network\mcpe\protocol\AddItemActorPacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\level\Level;
 use pocketmine\item\Item;
@@ -160,10 +160,10 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         }
         $item = Item::fromString($this->cases[$world][$cid]["item"]);
         $item->setCount($this->cases[$world][$cid]["count"]);
-        $pk = new AddItemEntityPacket();
+        $pk = new AddItemActorPacket();
         $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
         $pk->item = $item;
-        $pk->position = new Vector3($pos[0] + 0.5, (float) $pos[1], $pos[2] + 0.5);
+        $pk->position = new Vector3($pos[0] + 0.5, (float) $pos[1] + 0.25, $pos[2] + 0.5);
         $pk->motion = new Vector3(0, 0, 0);
         $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
         foreach($players as $pl) {
@@ -271,7 +271,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     public function onSendPacket(DataPacketSendEvent $ev) {
-        if($ev->getPacket()->pid() !== ProtocolInfo::FULL_CHUNK_DATA_PACKET) {
+        if($ev->getPacket()->pid() !== ProtocolInfo::LEVEL_CHUNK_PACKET) {
             return;
         }
         // Re-spawn as chunks get sent...
