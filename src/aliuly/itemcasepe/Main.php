@@ -288,7 +288,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $chunkZ = $packet->getChunkZ();
         foreach (array_keys($this->cases[$level->getName()]) as $cid) {
             $pos = explode(":", $cid);
-            if ($pos[0] >> 4 == $chunkX && $pos[2] >> 4 == $chunkZ) {
+            if (((int)$pos[0]) >> 4 == $chunkX && ((int)$pos[2]) >> 4 == $chunkZ) {
                 //echo "Respawn case... $cid\n"; //##DEBUG
                 $this->sndItemCase($level, $cid, [$pl]);
             }
@@ -344,14 +344,8 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         }
         unset($this->touches[$pl->getName()]);
         $ev->setCancelled();
-        if (is_callable([$ev->getItem(), "canBePlaced"])) {
-            if ($ev->getItem()->canBePlaced()) {
-                $this->places[$pl->getName()] = $pl->getName();
-            }
-        } elseif (is_callable([$ev->getItem(), "isPlaceable"])) {
-            if ($ev->getItem()->canBePlaced()) {
-                $this->places[$pl->getName()] = $pl->getName();
-            }
+        if ($ev->getItem()->canBePlaced()) {
+            $this->places[$pl->getName()] = $pl->getName();
         }
     }
 
