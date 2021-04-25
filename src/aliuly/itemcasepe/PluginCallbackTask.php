@@ -21,7 +21,6 @@
 namespace aliuly\itemcasepe;
 
 use pocketmine\scheduler\Task;
-use pocketmine\plugin\Plugin;
 
 /**
  * Allows the creation of simple callbacks with extra data
@@ -32,17 +31,14 @@ class PluginCallbackTask extends Task {
 
     /** @var callable */
     protected $callable;
-
     /** @var array */
     protected $args;
 
     /**
-     * @param Plugin   $owner
      * @param callable $callable
      * @param array    $args
      */
-    public function __construct(Plugin $owner, callable $callable, array $args = []) {
-		$this->plugin = $owner;
+    public function __construct(callable $callable, array $args = []) {
         $this->callable = $callable;
         $this->args = $args;
         $this->args[] = $this;
@@ -51,14 +47,14 @@ class PluginCallbackTask extends Task {
     /**
      * @return callable
      */
-    public function getCallable() {
+    public function getCallable(): callable {
         return $this->callable;
     }
 
-    public function onRun(int $currentTicks) {
+    public function onRun(int $currentTick) {
         $c = $this->callable;
         $args = $this->args;
-        $args[] = $currentTicks;
+        $args[] = $currentTick;
         $c(...$args);
     }
 
