@@ -17,7 +17,7 @@ use pocketmine\math\Vector3;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
-use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\network\mcpe\protocol\AddItemActorPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
 use pocketmine\world\World;
@@ -148,7 +148,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         if (!isset($this->cases[$world][$cid]["eid"])) return;
 
         $pk = new RemoveActorPacket();
-        $pk->entityUniqueId = $this->cases[$world][$cid]["eid"];
+        $pk->actorUniqueId = $this->cases[$world][$cid]["eid"];
         foreach ($players as $pl) {
             $pl->directDataPacket($pk);
         }
@@ -162,14 +162,14 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         if (!isset($this->cases[$world][$cid]["eid"])) {
             $this->cases[$world][$cid]["eid"] = Entity::$entityCount++;
         }
-        $item = \pocketmine\item\ItemIds::fromString($this->cases[$world][$cid]["item"]);
+        $item = Item::fromString($this->cases[$world][$cid]["item"]);
         $item->setCount($this->cases[$world][$cid]["count"]);
         $pk = new AddItemActorPacket();
-        $pk->entityRuntimeId = $this->cases[$world][$cid]["eid"];
+        $pk->actorRuntimeId = $this->cases[$world][$cid]["eid"];
         $pk->item = ItemStackWrapper::legacy($item);
         $pk->position = new Vector3($pos[0] + 0.5, (float)$pos[1] + 0.25, $pos[2] + 0.5);
         $pk->motion = new Vector3(0, 0, 0);
-        $pk->metadata = [Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, 1 << Entity::DATA_FLAG_IMMOBILE]];
+        $pk->metadata = [\pocketmine\network\mcpe\protocol\types\entity\EntityMetadataProperties::FLAGS => [\pocketmine\network\mcpe\protocol\types\entity\EntityMetadataTypes::LONG, 1 << \pocketmine\network\mcpe\protocol\types\entity\EntityMetadataFlags::IMMOBILE]];
         foreach ($players as $pl) {
             $pl->directDataPacket($pk);
         }
@@ -295,7 +295,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         }
     }
 
-    public function onLevelChange(EntityWorldChangeEvent $ev) {
+    public function onLevelChange(EntityTeleportEvent $ev) {
         if ($ev->isCancelled()) return;
         $pl = $ev->getEntity();
         if (!($pl instanceof Player)) return;
