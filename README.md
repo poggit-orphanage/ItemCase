@@ -1,9 +1,9 @@
 ItemCasePE
 =========
-
+Warning:This PM4 Version is not stable!
 * Summary: An implementation of Bukkit's ItemCase
 * Dependency Plugins: n/a
-* PocketMine-MP version: 1.6.2 - API 3.0.0-ALPHA5
+* PocketMine-MP version: 4.0.0
 * OptionalPlugins:
 * Categories: General
 * Plugin Access: Tile Entities, Items/Blocks
