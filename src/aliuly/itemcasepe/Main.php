@@ -119,16 +119,16 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     private function cmdRespawn(): bool {
-        foreach ($this->getServer()->getWorldManager()->getWorlds() as $lv) {
-            $world = $lv->getName();
-            $players = $lv->getPlayers();
+        foreach ($this->getServer()->getWorldManager() as $lv) {
+            $world = $lv->getWorldByName();
+            $players = $lv->getWorlds()->getPlayers();
             foreach (array_keys($this->cases[$world]) as $cid) {
                 $this->rmItemCase($lv, $cid, $players);
             }
         }
-        foreach ($this->getServer()->getWorldManager()->getWorlds() as $lv) {
-            $world = $lv->getName();
-            $players = $lv->getPlayers();
+        foreach ($this->getServer()->getWorldManager() as $lv) {
+            $world = $lv->getWorldByName();
+            $players = $lv->getWorlds()->getPlayers();
             foreach (array_keys($this->cases[$world]) as $cid) {
                 $this->sndItemCase($lv, $cid, $players);
             }
@@ -142,7 +142,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     ////////////////////////////////////////////////////////////////////////
     private function rmItemCase(World $level, $cid, array $players) {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getName();
+        $world = $level->getWorldManager()->getWorldByName();
         //echo "world=$world cid=$cid\n";
         // No EID assigned, it has not been spawned yet!
         if (!isset($this->cases[$world][$cid]["eid"])) return;
@@ -156,7 +156,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
 
     private function sndItemCase(World $level, $cid, array $players) {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getName();
+        $world = $level->getWorldManager()->getWorldByName;
         //echo "world=$world cid=$cid\n";
         $pos = explode(":", $cid);
         if (!isset($this->cases[$world][$cid]["eid"])) {
@@ -208,7 +208,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
 
     public function addItemCase(World $level, $cid, $idmeta, $count): bool {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getName();
+        $world = $level->getWorldManager()->getWorldByName;
         //echo "world=$world cid=$cid idmeta=$idmeta\n";
         if (!isset($this->cases[$world])) $this->cases[$world] = [];
         if (isset($this->cases[$world][$cid])) return false;
@@ -234,7 +234,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     private function loadCfg(World $lv) {
-        $world = $lv->getName();
+        $world = $lv->getWorldManager()->getWorldByName;
         $f = $lv->getProvider()->getPath() . "itemcasepe.txt";
         $this->cases[$world] = [];
         if (!file_exists($f)) return;
