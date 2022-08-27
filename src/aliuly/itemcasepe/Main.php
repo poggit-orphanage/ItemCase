@@ -142,7 +142,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     ////////////////////////////////////////////////////////////////////////
     private function rmItemCase(World $level, $cid, array $players) {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getWorldManager()->getWorldByName();
+        $world = $this->getWorldManager()->getWorldByName();
         //echo "world=$world cid=$cid\n";
         // No EID assigned, it has not been spawned yet!
         if (!isset($this->cases[$world][$cid]["eid"])) return;
@@ -156,7 +156,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
 
     private function sndItemCase(World $level, $cid, array $players) {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getWorldManager()->getWorldByName;
+        $world = $this->getWorldManager()->getWorldByName();
         //echo "world=$world cid=$cid\n";
         $pos = explode(":", $cid);
         if (!isset($this->cases[$world][$cid]["eid"])) {
@@ -208,7 +208,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
 
     public function addItemCase(World $level, $cid, $idmeta, $count): bool {
         //echo __METHOD__.",".__LINE__."\n";
-        $world = $level->getWorldManager()->getWorldByName;
+        $world = $this->getWorldManager()->getWorldByName;
         //echo "world=$world cid=$cid idmeta=$idmeta\n";
         if (!isset($this->cases[$world])) $this->cases[$world] = [];
         if (isset($this->cases[$world][$cid])) return false;
