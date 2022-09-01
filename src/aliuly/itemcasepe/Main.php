@@ -334,8 +334,8 @@ class Main extends PluginBase implements CommandExecutor, Listener {
             return;
         }
 
-        if (!$this->addItemCase($bl->getWorld(), $cid,
-            implode(":", [$item->getId(), $item->getDamage()]),
+        if (!$this->addItemCase($bl->getPosition()->getWorld(), $cid,
+            implode(":", [$item->getId(), $item->getMeta()]),
             $item->getCount())
         ) {
             $pl->sendMessage("There is already an ItemCase there!");
