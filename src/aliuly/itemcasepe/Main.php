@@ -359,7 +359,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     public function onBlockBreak(BlockBreakEvent $ev) {
         $pl = $ev->getPlayer();
         $bl = $ev->getBlock();
-        $lv = $bl->getWorld();
+        $lv = $bl->getPosition()->getWorld();
         $yoff = $bl->getId() != \pocketmine\block\BlockLegacyIds::GLASS ? 1 : 0;
         $cid = implode(":", [$bl->getPosition()->getX(), $bl->getPosition()->getY() + $yoff, $bl->getPosition()->getZ()]);
 
