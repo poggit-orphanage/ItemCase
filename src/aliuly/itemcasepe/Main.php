@@ -326,7 +326,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
                 $bl = $bl->getSide(Vector3::SIDE_UP);
             }
         }
-        $cid = implode(":", [$bl->getX(), $bl->getY(), $bl->getZ()]);
+        $cid = implode(":", [$bl->getPosition()->getX(), $bl->getPosition()->getY(), $bl->getPosition()->getZ()]);
         $item = $pl->getInventory()->getItemInHand();
         if ($item->getId() === \pocketmine\item\ItemIds::AIR) {
             $pl->sendMessage("You must be holding an item!");
@@ -361,7 +361,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         $bl = $ev->getBlock();
         $lv = $bl->getWorld();
         $yoff = $bl->getId() != \pocketmine\block\BlockLegacyIds::GLASS ? 1 : 0;
-        $cid = implode(":", [$bl->getX(), $bl->getY() + $yoff, $bl->getZ()]);
+        $cid = implode(":", [$bl->getPosition()->getX(), $bl->getPosition()->getY() + $yoff, $bl->getPosition()->getZ()]);
 
         //echo "Block break at/near $cid\n";
         if (isset($this->cases[$lv->getName()][$cid])) {
