@@ -54,7 +54,7 @@ class PluginCallbackTask extends Task {
     public function onRun(): void{
         $c = $this->callable;
         $args = $this->args;
-        $args[] = false;
+        $args[] = int;
         $c(...$args);
     }
 
