@@ -17,7 +17,6 @@ use pocketmine\math\Vector3;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
-use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\network\mcpe\protocol\AddItemActorPacket;
 use pocketmine\network\mcpe\protocol\RemoveActorPacket;
 use pocketmine\world\World;
@@ -295,7 +294,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
         }
     }
 
-    public function onLevelChange(EntityTeleportEvent $ev) {
+    public function onLevelChange(WorldC $ev) {
         if ($ev->isCancelled()) return;
         $pl = $ev->getEntity();
         if (!($pl instanceof Player)) return;
