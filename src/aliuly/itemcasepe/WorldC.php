@@ -12,7 +12,7 @@ use pocketmine\event\entity\EntityEvent;
 /**
  * @phpstan-extends EntityEvent<Entity>
  */
-class EntityWorldChangeEvent extends EntityEvent implements Cancellable{
+class WorldC extends EntityEvent implements Cancellable{
 	use CancellableTrait;
 	
 	/** @var World */
