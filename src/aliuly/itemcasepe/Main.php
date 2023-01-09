@@ -136,7 +136,7 @@ class Main extends PluginBase implements Listener {
     // Place/Remove ItemCases
     //
     ////////////////////////////////////////////////////////////////////////
-    private function rmItemCase(World $world, $cid, array $players) {
+    private function rmItemCase(World $world, $cid, array $players): void {
         //echo __METHOD__.",".__LINE__."\n";
         $worldName = $world->getFolderName();
         //echo "world=$world cid=$cid\n";
@@ -156,7 +156,7 @@ class Main extends PluginBase implements Listener {
 	 *
 	 * @return void
 	 */
-    private function sndItemCase(World $world, string $cid, array $players) : void {
+    private function sndItemCase(World $world, string $cid, array $players): void {
         //echo __METHOD__.",".__LINE__."\n";
 		$worldName = $world->getFolderName();
         //echo "world=$world cid=$cid\n";
@@ -186,14 +186,14 @@ class Main extends PluginBase implements Listener {
         //}
     }
 
-    public function spawnPlayerCases(Player $pl, World $world) {
+    public function spawnPlayerCases(Player $pl, World $world): void {
         if (!isset($this->cases[$world->getFolderName()])) return;
         foreach (array_keys($this->cases[$world->getFolderName()]) as $cid) {
             $this->sndItemCase($world, $cid, [$pl]);
         }
     }
 
-    public function spawnLevelItemCases(World $world) {
+    public function spawnLevelItemCases(World $world): void {
         if (!isset($this->cases[$world->getFolderName()])) return;
         $ps = $world->getPlayers();
         if (!count($ps)) {
@@ -224,7 +224,7 @@ class Main extends PluginBase implements Listener {
         return true;
     }
 
-    private function saveCfg(World $world) {
+    private function saveCfg(World $world): void {
 		$worldName = $world->getFolderName();
         $f = $world->getProvider()->getPath() . "itemcasepe.txt";
         if (!isset($this->cases[$worldName]) || count($this->cases[$worldName]) == 0) {
@@ -238,7 +238,7 @@ class Main extends PluginBase implements Listener {
         file_put_contents($f, $dat);
     }
 
-    private function loadCfg(World $world) {
+    private function loadCfg(World $world): void {
         $worldName = $world->getFolderName();
         $f = $world->getProvider()->getPath() . "itemcasepe.txt";
         $this->cases[$worldName] = [];
@@ -258,28 +258,28 @@ class Main extends PluginBase implements Listener {
     //////////////////////////////////////////////////////////////////////
     //
     // Make sure configs are loaded/unloaded
-    public function onWorldLoad(WorldLoadEvent $e) {
+    public function onWorldLoad(WorldLoadEvent $e): void {
         $this->loadCfg($e->getWorld());
     }
 
-    public function onWorldUnload(WorldUnloadEvent $e) {
+    public function onWorldUnload(WorldUnloadEvent $e): void {
         $world = $e->getWorld()->getFolderName();
         if (isset($this->cases[$world])) unset($this->cases[$world]);
     }
 
-    public function onPlayerJoin(PlayerJoinEvent $ev) {
+    public function onPlayerJoin(PlayerJoinEvent $ev): void {
         $pl = $ev->getPlayer();
         $world = $pl->getLocation()->getWorld();
         $this->spawnPlayerCases($pl, $world);
     }
 
-    public function onPlayerRespawn(PlayerRespawnEvent $ev) {
+    public function onPlayerRespawn(PlayerRespawnEvent $ev): void {
         $pl = $ev->getPlayer();
         $world = $pl->getLocation()->getWorld();
         $this->spawnPlayerCases($pl, $world);
     }
 
-    public function onSendPacket(DataPacketSendEvent $ev) {
+    public function onSendPacket(DataPacketSendEvent $ev): void {
 		foreach($ev->getPackets() as $packet) {
 			if (!$packet instanceof LevelChunkPacket) {
 				return;
@@ -301,7 +301,7 @@ class Main extends PluginBase implements Listener {
 		}
     }
 
-    public function onWorldChange(EntityTeleportEvent $ev) {
+    public function onWorldChange(EntityTeleportEvent $ev): void {
         if ($ev->getTo()->getWorld() === $ev->getFrom()->getWorld()) return;
         $pl = $ev->getEntity();
         if (!($pl instanceof Player)) return;
@@ -314,7 +314,7 @@ class Main extends PluginBase implements Listener {
         //$this->spawnPlayerCases($pl,$ev->getTarget());
     }
 
-    public function onPlayerInteract(PlayerInteractEvent $ev) {
+    public function onPlayerInteract(PlayerInteractEvent $ev): void {
         $pl = $ev->getPlayer();
         if (!isset($this->touches[$pl->getName()])) return;
         $bl = $ev->getBlock();
@@ -357,14 +357,14 @@ class Main extends PluginBase implements Listener {
         }
     }
 
-    public function onBlockPlace(BlockPlaceEvent $ev) {
+    public function onBlockPlace(BlockPlaceEvent $ev): void {
         $pl = $ev->getPlayer();
         if (!isset($this->places[$pl->getName()])) return;
         $ev->cancel();
         unset($this->places[$pl->getName()]);
     }
 
-    public function onBlockBreak(BlockBreakEvent $ev) {
+    public function onBlockBreak(BlockBreakEvent $ev): void {
         $pl = $ev->getPlayer();
         $bl = $ev->getBlock();
 		$blpos = $bl->getPosition();
