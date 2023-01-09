@@ -52,7 +52,7 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     // Standard call-backs
-    public function onEnable() {
+    public function onEnable() : void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         // Check pre-loaded worlds
         foreach ($this->getServer()->getLevels() as $l) {
