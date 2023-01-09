@@ -72,24 +72,14 @@ class Main extends PluginBase implements CommandExecutor, Listener {
     }
 
     public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args): bool {
-        switch ($cmd->getName()) {
-            case "itemcase":
-                if (!count($args)) return $this->cmdAdd($sender);
-                $scmd = strtolower(array_shift($args));
-                switch ($scmd) {
-                    case "add":
-                        return $this->cmdAdd($sender);
-                    case "cancel":
-                        return $this->cmdCancelAdd($sender);
-                    case "respawn":
-                        return $this->cmdRespawn();
-                    case "reset":
-                    case "list":
-                        $sender->sendMessage("Not implemented yet!");
-                        return false;
-                }
-        }
-        return false;
+		if (count($args) < 1)
+			return $this->cmdAdd($sender);
+		return match(strtolower(array_shift($args))) {
+			"add" => $this->cmdAdd($sender),
+			"cancel" => $this->cmdCancelAdd($sender),
+			"respawn" => $this->cmdRespawn(),
+			default => false,
+		};
     }
 
     // Command implementations
