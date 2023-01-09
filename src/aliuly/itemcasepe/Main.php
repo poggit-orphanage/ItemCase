@@ -309,7 +309,8 @@ class Main extends PluginBase implements Listener {
         foreach ($this->getServer()->getWorldManager()->getWorlds() as $world) {
             $this->despawnPlayerCases($pl, $world);
         }
-        $this->getScheduler()->scheduleDelayedTask(new PluginCallbackTask([$this, "spawnPlayerCases"], [$pl, $ev->getTarget()]), 20);
+		$target = $ev->getTo()->getWorld();
+        $this->getScheduler()->scheduleDelayedTask(new ClosureTask(\Closure::fromCallable(function() use($pl, $target): void{ $this->spawnPlayerCases($pl, $target); })), 20);
         //$this->spawnPlayerCases($pl,$ev->getTarget());
     }
 
